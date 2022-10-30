@@ -24,7 +24,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     ""name"": ""PlayerInputs"",
     ""maps"": [
         {
-            ""name"": ""PlayerMovement"",
+            ""name"": ""Basic Inputs"",
             ""id"": ""66c0850f-7247-4774-954d-b56f8602d3ed"",
             ""actions"": [
                 {
@@ -35,6 +35,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Change Player"",
+                    ""type"": ""Button"",
+                    ""id"": ""51af31cd-ca7b-4957-8bd5-b4d8507a87ea"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -92,15 +101,27 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3eb75e1-a5a6-46bc-981f-41fa336a5a0e"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Change Player"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // PlayerMovement
-        m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
-        m_PlayerMovement_Movement = m_PlayerMovement.FindAction("Movement", throwIfNotFound: true);
+        // Basic Inputs
+        m_BasicInputs = asset.FindActionMap("Basic Inputs", throwIfNotFound: true);
+        m_BasicInputs_Movement = m_BasicInputs.FindAction("Movement", throwIfNotFound: true);
+        m_BasicInputs_ChangePlayer = m_BasicInputs.FindAction("Change Player", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -157,40 +178,49 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // PlayerMovement
-    private readonly InputActionMap m_PlayerMovement;
-    private IPlayerMovementActions m_PlayerMovementActionsCallbackInterface;
-    private readonly InputAction m_PlayerMovement_Movement;
-    public struct PlayerMovementActions
+    // Basic Inputs
+    private readonly InputActionMap m_BasicInputs;
+    private IBasicInputsActions m_BasicInputsActionsCallbackInterface;
+    private readonly InputAction m_BasicInputs_Movement;
+    private readonly InputAction m_BasicInputs_ChangePlayer;
+    public struct BasicInputsActions
     {
         private @PlayerInputs m_Wrapper;
-        public PlayerMovementActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Movement => m_Wrapper.m_PlayerMovement_Movement;
-        public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
+        public BasicInputsActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Movement => m_Wrapper.m_BasicInputs_Movement;
+        public InputAction @ChangePlayer => m_Wrapper.m_BasicInputs_ChangePlayer;
+        public InputActionMap Get() { return m_Wrapper.m_BasicInputs; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerMovementActions set) { return set.Get(); }
-        public void SetCallbacks(IPlayerMovementActions instance)
+        public static implicit operator InputActionMap(BasicInputsActions set) { return set.Get(); }
+        public void SetCallbacks(IBasicInputsActions instance)
         {
-            if (m_Wrapper.m_PlayerMovementActionsCallbackInterface != null)
+            if (m_Wrapper.m_BasicInputsActionsCallbackInterface != null)
             {
-                @Movement.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
-                @Movement.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
-                @Movement.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMovement;
+                @Movement.started -= m_Wrapper.m_BasicInputsActionsCallbackInterface.OnMovement;
+                @Movement.performed -= m_Wrapper.m_BasicInputsActionsCallbackInterface.OnMovement;
+                @Movement.canceled -= m_Wrapper.m_BasicInputsActionsCallbackInterface.OnMovement;
+                @ChangePlayer.started -= m_Wrapper.m_BasicInputsActionsCallbackInterface.OnChangePlayer;
+                @ChangePlayer.performed -= m_Wrapper.m_BasicInputsActionsCallbackInterface.OnChangePlayer;
+                @ChangePlayer.canceled -= m_Wrapper.m_BasicInputsActionsCallbackInterface.OnChangePlayer;
             }
-            m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
+            m_Wrapper.m_BasicInputsActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
+                @ChangePlayer.started += instance.OnChangePlayer;
+                @ChangePlayer.performed += instance.OnChangePlayer;
+                @ChangePlayer.canceled += instance.OnChangePlayer;
             }
         }
     }
-    public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
-    public interface IPlayerMovementActions
+    public BasicInputsActions @BasicInputs => new BasicInputsActions(this);
+    public interface IBasicInputsActions
     {
         void OnMovement(InputAction.CallbackContext context);
+        void OnChangePlayer(InputAction.CallbackContext context);
     }
 }

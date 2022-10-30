@@ -4,41 +4,29 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private LayerMask ignoreLayer;
-     
-    private PlayerInputs _playerInputs;
-    private Transform _transform;
+    public float maxDistance;
+    public bool moving = true;
     
-    private void Awake()
-    {
-        _playerInputs = new PlayerInputs();
-    }
-
-    private void OnEnable()
-    {
-        _playerInputs.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _playerInputs.Disable();
-    }
+    [SerializeField] private LayerMask ignoreLayer;
+    
+    private Transform _transform;
 
     private void Start()
     {
         _transform = transform;
-        _playerInputs.PlayerMovement.Movement.performed += MovementPerformed;
+        InputManager.BasicInputs.Movement.performed += MovementPerformed;
     }
 
     private void MovementPerformed(InputAction.CallbackContext obj)
     {
+        if (!moving) return;
         RotatePlayer();
         CheckForPlatform();
     }
 
     private void RotatePlayer()
     {
-        var move = _playerInputs.PlayerMovement.Movement.ReadValue<Vector2>();
+        var move = InputManager.BasicInputs.Movement.ReadValue<Vector2>();
         
         if (move.x != 0f)
             _transform.rotation = Quaternion.Euler(0f, 90f * move.x, 0f);
@@ -53,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckForPlatform()
     {
-        if (!Physics.Raycast(_transform.position, _transform.forward, out var hit, Mathf.Infinity, ~ignoreLayer)) return;
+        if (!Physics.Raycast(_transform.position, _transform.forward, out var hit, maxDistance, ~ignoreLayer)) return;
         
         var hitPos = hit.transform.position;
         var pos = new Vector3(hitPos.x, _transform.position.y, hitPos.z);

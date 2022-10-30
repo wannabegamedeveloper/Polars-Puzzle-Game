@@ -2,7 +2,7 @@
     "name": "PlayerInputs",
     "maps": [
         {
-            "name": "PlayerMovement",
+            "name": "Basic Inputs",
             "id": "66c0850f-7247-4774-954d-b56f8602d3ed",
             "actions": [
                 {
@@ -13,6 +13,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Change Player",
+                    "type": "Button",
+                    "id": "51af31cd-ca7b-4957-8bd5-b4d8507a87ea",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -70,6 +79,17 @@
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a3eb75e1-a5a6-46bc-981f-41fa336a5a0e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Player",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

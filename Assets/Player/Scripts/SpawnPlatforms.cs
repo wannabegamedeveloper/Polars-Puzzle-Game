@@ -5,7 +5,8 @@ public class SpawnPlatforms : MonoBehaviour
     [SerializeField] private GameObject platform;
     [SerializeField] private LayerMask ignorePlatform;
     [SerializeField] private LayerMask ignoreSpawnLoc;
-    
+    [SerializeField] private PlayerMovement playerMovement;
+
     private bool _triggeredOnce;
     private Transform _transform;
 
@@ -24,8 +25,10 @@ public class SpawnPlatforms : MonoBehaviour
 
     private void GeneratePlatform()
     {
-        if (!Physics.Raycast(_transform.position, _transform.forward, out var hit, Mathf.Infinity, ~ignorePlatform)) return;
-        if (Physics.Raycast(_transform.position + _transform.forward * .2f, _transform.forward, Mathf.Infinity, ~ignoreSpawnLoc)) return;
+        if (!Physics.Raycast(_transform.position, _transform.forward, out var hit, playerMovement.maxDistance,
+                ~ignorePlatform)) return;
+        if (Physics.Raycast(_transform.position + _transform.forward * .2f, _transform.forward,
+                playerMovement.maxDistance, ~ignoreSpawnLoc)) return;
         
         var platformInstance = Instantiate(platform, hit.transform.position,
             Quaternion.Inverse(hit.transform.rotation));
