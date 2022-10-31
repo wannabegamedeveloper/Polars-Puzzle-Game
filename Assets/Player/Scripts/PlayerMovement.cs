@@ -8,9 +8,11 @@ public class PlayerMovement : MonoBehaviour
 {
     public float maxDistance;
     public bool moving = true;
-
+    public bool inWin = false;
+    
     [SerializeField] private LayerMask ignoreLayer;
-
+    [SerializeField] private LayerMask bottomLayer;
+    
     private Transform _transform;
 
     private void Start()
@@ -21,13 +23,18 @@ public class PlayerMovement : MonoBehaviour
 
     public void CheckPlatformBelow()
     {
-        if (!Physics.Raycast(transform.position, Vector3.down, Mathf.Infinity, ignoreLayer))
-            StartCoroutine(RestartScene());
+        if (Physics.Raycast(_transform.position, Vector3.down, out var hit, 2f, bottomLayer))
+        {
+            //StartCoroutine(RestartScene());
+            print(hit.transform.gameObject);
+            print(transform.name);
+        }
     }
     
     private void MovementPerformed(InputAction.CallbackContext obj)
     {
         if (!moving) return;
+        GetComponent<Collider>().enabled = true;
         RotatePlayer();
         CheckForPlatform();
     }
@@ -59,12 +66,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (inWin) return;
         if (!other.CompareTag("Player") && !other.CompareTag("Toxic")) return;
         if (other.gameObject.GetComponent<PlayerMovement>())
             StartCoroutine(RestartScene());
     }
 
-    private static IEnumerator RestartScene()
+    public IEnumerator RestartScene()
     {
         yield return new WaitForSeconds(.2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

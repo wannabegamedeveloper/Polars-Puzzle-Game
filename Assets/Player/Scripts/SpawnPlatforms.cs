@@ -39,13 +39,13 @@ public class SpawnPlatforms : MonoBehaviour
 
     private void RemovePlatform()
     {
-        if (Physics.Raycast(_transform.position + _transform.forward * .2f, _transform.forward, out var hit,
-                thisPlayer.maxDistance, ~ignoreSpawnLoc))
-        {
-            Destroy(hit.transform.gameObject);
-            if (player == null) return;
-            player.CheckPlatformBelow();
-        }
+        if (!Physics.Raycast(_transform.position + _transform.forward * .2f, _transform.forward, out var hit,
+                thisPlayer.maxDistance, ~ignoreSpawnLoc)) return;
+        if (player == null) return;
+        if (Vector3.Distance(player.transform.position, hit.transform.parent.position) < .2f)
+            StartCoroutine(player.RestartScene());
+
+        Destroy(hit.transform.parent.gameObject);
     }
 
     private void GeneratePlatform()

@@ -149,6 +149,9 @@ MonoBehaviour:
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 776
+  bottomLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!54 &6499581198470711139
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -187,3 +190,6 @@ MonoBehaviour:
     m_Bits: 776
   thisPlayer: {fileID: 6499581198470711137}
   player: {fileID: 0}
+  bottomLayer:
+    serializedVersion: 2
+    m_Bits: 2048

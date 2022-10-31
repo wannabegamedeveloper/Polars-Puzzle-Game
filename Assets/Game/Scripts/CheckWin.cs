@@ -5,15 +5,17 @@ using UnityEngine.SceneManagement;
 public class CheckWin : MonoBehaviour
 {
     [SerializeField] private int numberOfPlayers;
-
-    private int _index;
+    [SerializeField] private int index;
     
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") || other.CompareTag("Toxic"))
-            _index++;
+        {
+            index++;
+            other.GetComponent<PlayerMovement>().inWin = true;
+        }
 
-        if (_index == numberOfPlayers)
+        if (index == numberOfPlayers)
             StartCoroutine(Change());
     }
 
@@ -25,6 +27,7 @@ public class CheckWin : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        _index--;
+        index--;
+        other.GetComponent<PlayerMovement>().inWin = false;
     }
 }
