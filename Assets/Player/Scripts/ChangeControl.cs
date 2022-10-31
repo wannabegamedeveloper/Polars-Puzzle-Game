@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,14 +16,17 @@ public class ChangeControl : MonoBehaviour
 
     private void ChangePlayer(InputAction.CallbackContext obj)
     {
+        if (GetClickedObject() == null) return;
         var clickedObject = GetClickedObject();
         var playerMovement = clickedObject.GetComponent<PlayerMovement>();
         playerMovement.moving = true;
+        playerMovement.transform.GetChild(0).DOScale(Vector3.one * 2f, .1f);
         
         foreach (var movableObject in _movableObjects)
         {
-            if (movableObject != playerMovement)
-                movableObject.moving = false;
+            if (movableObject == playerMovement) continue;
+            movableObject.moving = false;
+            movableObject.transform.GetChild(0).DOScale(Vector3.one, .1f);
         }
     }
 
